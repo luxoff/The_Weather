@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_weather_screen"
-    tools:context=".ui.weatherscreen.WeatherFragment">
+    tools:context=".ui.weatherscreen.view.WeatherFragment">
 
 
     <LinearLayout
@@ -42,7 +42,7 @@
         android:id="@+id/ll_main_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="220dp"
+        android:layout_marginTop="190dp"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/ll_temp_container"
@@ -67,10 +67,15 @@
             tools:text="20°C" />
 
         <Button
-            android:layout_width="70dp"
-            android:layout_height="30dp"
-            android:alpha="0.4"
-            android:background="@drawable/oval_button" />
+            android:layout_width="114dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="15dp"
+            style="@style/Widget.MaterialComponents.Button.Icon"
+            app:icon="@drawable/ic_air_quality"
+            android:background="@drawable/oval_button"
+            app:backgroundTint="@null"
+            android:textSize="15sp"
+            tools:text="AQI 24"/>
     </LinearLayout>
 
     <LinearLayout
@@ -93,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/min_temp"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:layout_marginEnd="5dp"/>
             <TextView
                 android:id="@+id/tv_min_temp"
@@ -101,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 tools:text="16°C"/>
         </LinearLayout>
 
@@ -116,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/max_temp"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:layout_marginEnd="5dp"/>
             <TextView
                 android:id="@+id/tv_max_temp"
@@ -124,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 tools:text="22°C"/>
         </LinearLayout>
 
