@@ -9,7 +9,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.net.InetAddress
 import java.net.URL
+import java.net.UnknownHostException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -17,9 +19,9 @@ class WeatherViewModel() : ViewModel(){
     private val apiKey = "214aa3c9e148c620ec34997d7af3a3f3"
     val weatherObject: MutableLiveData<WeatherInfo> by lazy { MutableLiveData<WeatherInfo>() }
 
-    fun getWeatherInfo(location: String) = viewModelScope.launch{
+    fun getWeatherInfo(lon: String, lat: String) = viewModelScope.launch{
         withContext(Dispatchers.IO) {
-            val response = getWeatherResponse(location, apiKey)
+            val response = getWeatherResponse(lon, lat, apiKey)
             val jsonWeatherObj =
                 JSONObject(response ?: "{}")
             val main = jsonWeatherObj.getJSONObject("main")
@@ -40,9 +42,9 @@ class WeatherViewModel() : ViewModel(){
             val fullLocationName =
                 jsonWeatherObj.getString("name") + ", " + sys.getString("country")
             val updatedAt: Long = jsonWeatherObj.getLong("dt")
-            val updatedAtText = "Updated at ${
+            val updatedAtText = "Updated ${
                 SimpleDateFormat(
-                    "dd/MM/yyyy hh:mm a", Locale.ENGLISH
+                    "dd/MM/yyyy 'at' hh:mm a", Locale.ENGLISH
                 ).format(Date(updatedAt * 1000))
             }"
 
@@ -60,10 +62,19 @@ class WeatherViewModel() : ViewModel(){
                 )
             )
         }
+    }
+
+    private fun getWeatherResponse(lon: String, lat: String, apiKey: String): String? {
+        val apiUrl = "https://api.openweathermap.org/data/2.5/weather?" +
+                "lat=$lat&lon=$lon&appid=$apiKey&units=metric"
+        //Catching possible UnknownHostException for the first time
+        try {
+            val i: InetAddress = InetAddress.getByName(apiUrl)
+        } catch (e1: UnknownHostException) {
+            e1.printStackTrace()
         }
 
-    private suspend fun getWeatherResponse(locationCode: String, apiKey: String): String? {
-        val apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=$locationCode&appid=$apiKey"
+        //Trying actual connection
         val response: String? = try{
             URL(apiUrl).readText(charset("UTF-8"))
         } catch (ex: Exception){

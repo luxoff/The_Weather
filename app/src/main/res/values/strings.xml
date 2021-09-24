@@ -9,4 +9,10 @@
     <string name="sunset">Sunset</string>
     <string name="min_temp">Min Temp:</string>
     <string name="max_temp">Max Temp:</string>
+    <string name="refresh">Refresh</string>
+    <string name="refresh_button">refresh button</string>
+    <string name="location_permission_rationale">In order to show the weather for your city,
+        an app needs to know your location.</string>
+    <string name="pressure_icon">pressure icon</string>
+    <string name="humidity_icon">humidity icon</string>
 </resources>

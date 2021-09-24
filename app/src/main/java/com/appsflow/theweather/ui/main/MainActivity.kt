@@ -1,7 +1,7 @@
 package com.appsflow.theweather.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.appsflow.theweather.R
 
 class MainActivity : AppCompatActivity() {
