@@ -76,6 +76,10 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                 tvWind.text = it.wind
                 tvSunrise.text = it.sunrise
                 tvSunset.text = it.sunset
+
+                val animation: Animation =
+                    AnimationUtils.loadAnimation(requireContext(), R.anim.fade_temp)
+                tvTemperature.startAnimation(animation)
             }
             viewModel.weatherObject.observe(requireActivity(), weatherObjectObserver)
         }

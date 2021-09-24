@@ -84,7 +84,7 @@
             android:background="@drawable/oval_button"
             app:backgroundTint="@null"
             android:textSize="15sp"
-            tools:text="AQI 24"/>
+            android:text="@string/aqi_24"/>
     </LinearLayout>
 
     <LinearLayout
@@ -215,7 +215,8 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@drawable/ic_wind"
-                android:backgroundTint="@color/white" />
+                android:backgroundTint="@color/white"
+                android:contentDescription="@string/wind_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -257,7 +258,8 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@drawable/ic_sunrise"
-                android:backgroundTint="@color/white" />
+                android:backgroundTint="@color/white"
+                android:contentDescription="@string/sunrise_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -285,7 +287,8 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@drawable/ic_sunset"
-                android:backgroundTint="@color/white" />
+                android:backgroundTint="@color/white"
+                android:contentDescription="@string/sunset_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
