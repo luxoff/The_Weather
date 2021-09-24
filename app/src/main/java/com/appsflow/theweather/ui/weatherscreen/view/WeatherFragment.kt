@@ -5,6 +5,8 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -53,6 +55,10 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
             getWeatherWithPermissionsGranted(view, viewModel)
 
             btnRefresh.setOnClickListener {
+                val animation: Animation =
+                    AnimationUtils.loadAnimation(requireContext(), R.anim.refresh_clockwise_animation)
+                it.startAnimation(animation)
+
                 getWeatherWithPermissionsGranted(view, viewModel)
             }
 
