@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.appsflow.theweather.R
 import com.appsflow.theweather.data.model.WeatherInfo
 import com.appsflow.theweather.databinding.FragmentWeatherBinding
@@ -82,6 +83,11 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                 tvTemperature.startAnimation(animation)
             }
             viewModel.weatherObject.observe(requireActivity(), weatherObjectObserver)
+
+            btnForecast.setOnClickListener {
+                val action = WeatherFragmentDirections.actionWeatherFragmentToForecastFragment()
+                findNavController().navigate(action)
+            }
         }
     }
 
