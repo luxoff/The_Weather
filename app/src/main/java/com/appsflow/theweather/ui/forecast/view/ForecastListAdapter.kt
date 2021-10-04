@@ -31,7 +31,6 @@ class ForecastListAdapter(private val mutableForecastList: MutableList<ForecastW
         fun bind(item: ForecastWeatherInfo) = with(binding) {
             tvDate.text = item.datetime
             tvStatus.text = item.status
-            tvTemperature.text = item.temp
             tvMinTemp.text = item.minTemp
             tvMaxTemp.text = item.maxTemp
             binding.root.setOnClickListener {

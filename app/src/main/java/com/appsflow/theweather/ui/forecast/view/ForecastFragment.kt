@@ -29,7 +29,6 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
             forecastList.add(
                 ForecastWeatherInfo(
                     status = "Cloudy",
-                    temp = "11°C",
                     minTemp = "9°C",
                     maxTemp = "12°C",
                     datetime = "Mon, 22/11"
@@ -39,7 +38,6 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
             forecastList.add(
                 ForecastWeatherInfo(
                     status = "Sunny",
-                    temp = "13°C",
                     minTemp = "9°C",
                     maxTemp = "13°C",
                     datetime = "Tue, 23/11"
@@ -49,7 +47,6 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
             forecastList.add(
                 ForecastWeatherInfo(
                     status = "Cloudy",
-                    temp = "11°C",
                     minTemp = "9°C",
                     maxTemp = "12°C",
                     datetime = "Wed, 24/11"
@@ -59,7 +56,6 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
             forecastList.add(
                 ForecastWeatherInfo(
                     status = "Rainy",
-                    temp = "7°C",
                     minTemp = "5°C",
                     maxTemp = "10°C",
                     datetime = "Thu, 25/11"
@@ -69,7 +65,6 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
             forecastList.add(
                 ForecastWeatherInfo(
                     status = "Cloudy",
-                    temp = "11°C",
                     minTemp = "9°C",
                     maxTemp = "12°C",
                     datetime = "Fri, 26/11"
