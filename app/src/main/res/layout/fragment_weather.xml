@@ -75,7 +75,8 @@
             tools:text="20°C" />
 
         <Button
-            android:layout_width="114dp"
+            android:id="@+id/btn_forecast"
+            android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
@@ -84,7 +85,7 @@
             android:background="@drawable/oval_button"
             app:backgroundTint="@null"
             android:textSize="15sp"
-            android:text="@string/aqi_24"/>
+            android:text="Forecast"/>
     </LinearLayout>
 
     <LinearLayout
