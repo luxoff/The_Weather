@@ -12,11 +12,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.appsflow.theweather.R
 import com.appsflow.theweather.data.model.WeatherInfo
+import com.appsflow.theweather.data.service.MainRepository
+import com.appsflow.theweather.data.service.network.WeatherAPI
 import com.appsflow.theweather.databinding.FragmentWeatherBinding
 import com.appsflow.theweather.ui.weatherscreen.viewmodel.WeatherViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -24,9 +25,12 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class WeatherFragment : Fragment(R.layout.fragment_weather) {
+    private lateinit var viewModel: WeatherViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
@@ -43,10 +47,13 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                 }
             }
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val viewModel: WeatherViewModel by viewModels()
         val binding = FragmentWeatherBinding.bind(view)
+        val weatherService = WeatherAPI.getWeatherService()
+        val mainRepository = MainRepository(weatherService)
+        val viewModel = WeatherViewModel(mainRepository)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         binding.apply {
@@ -57,58 +64,87 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
 
             btnRefresh.setOnClickListener {
                 val animation: Animation =
-                    AnimationUtils.loadAnimation(requireContext(), R.anim.refresh_clockwise_animation)
+                    AnimationUtils.loadAnimation(
+                        requireContext(),
+                        R.anim.refresh_clockwise_animation
+                    )
                 it.startAnimation(animation)
 
                 getWeatherWithPermissionsGranted(view, viewModel)
             }
 
-            //viewModel.getWeatherInfo("kyiv,ua")
-
             val weatherObjectObserver = Observer<WeatherInfo> {
-                tvLocation.text = it.location
-                tvUpdatedAt.text = it.updatedAt
-                tvCurrentWeatherStatus.text = it.status.replaceFirstChar { it -> it.uppercase() }
-                tvTemperature.text = it.temp.substringBefore(".") + "°C"
-                tvMinTemp.text = it.minTemp.substringBefore(".") + "°C"
-                tvMaxTemp.text = it.maxTemp.substringBefore(".") + "°C"
-                tvPressure.text = it.pressure
-                tvHumidity.text = it.humidity
-                tvWind.text = it.wind
-                tvSunrise.text = it.sunrise
-                tvSunset.text = it.sunset
+                tvLocation.text = "${it.cityName}, ${it.systemInfo.country}"
+                tvUpdatedAt.text = "Updated ${
+                    SimpleDateFormat(
+                        "dd/MM/yyyy 'at' hh:mm a", Locale.ENGLISH
+                    ).format(Date(it.deltaTime.toLong() * 1000))
+                }"
+                tvCurrentWeatherStatus.text =
+                    it.weatherDescription[0].description.replaceFirstChar { it -> it.uppercase() }
+                tvTemperature.text = it.mainInfo.temp.toString().substringBefore(".") + "°C"
+                tvMinTemp.text = it.mainInfo.tempMin.toString().substringBefore(".") + "°C"
+                tvMaxTemp.text = it.mainInfo.tempMax.toString().substringBefore(".") + "°C"
+                tvPressure.text = it.mainInfo.pressure.toString()
+                tvHumidity.text = it.mainInfo.humidity.toString()
+                tvWind.text = it.windInfo.speed.toString()
+
+                tvSunrise.text = SimpleDateFormat(
+                    "hh:mm a", Locale.ENGLISH
+                ).format(Date(it.systemInfo.sunrise.toLong() * 1000))
+
+                tvSunset.text = SimpleDateFormat(
+                    "hh:mm a", Locale.ENGLISH
+                ).format(Date(it.systemInfo.sunset.toLong() * 1000))
 
                 val animation: Animation =
                     AnimationUtils.loadAnimation(requireContext(), R.anim.fade_temp)
                 tvTemperature.startAnimation(animation)
             }
+
             viewModel.weatherObject.observe(requireActivity(), weatherObjectObserver)
 
             btnForecast.setOnClickListener {
                 val action = WeatherFragmentDirections.actionWeatherFragmentToForecastFragment()
                 findNavController().navigate(action)
             }
+
+            viewModel.errorMessage.observe(requireActivity(), {
+                Snackbar.make(view, it, Snackbar.LENGTH_SHORT).show()
+            })
         }
     }
 
-    private fun getWeatherWithPermissionsGranted(view: View, viewModel: WeatherViewModel){
-        when{
-            ContextCompat.checkSelfPermission(requireActivity(),
+    private fun getWeatherWithPermissionsGranted(view: View, viewModel: WeatherViewModel) {
+        when {
+            ContextCompat.checkSelfPermission(
+                requireActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED -> {
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener {
-                        viewModel.getWeatherInfo(
+                        viewModel.getWeatherResponse(
+                            lat = it.latitude.toString(),
                             lon = it.longitude.toString(),
-                            lat = it.latitude.toString()
+                            units = "metric"
                         )
                     }
             }
-            ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION) -> {
-                Snackbar.make(view,
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) -> {
+                Snackbar.make(
+                    view,
                     getString(R.string.location_permission_rationale),
-                    Snackbar.LENGTH_LONG).show()
+                    Snackbar.LENGTH_LONG
+                ).setAction(
+                    "GRANT"
+                ) {
+                    requestPermissionLauncher
+                        .launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                }
+                    .show()
             }
             else -> {
                 requestPermissionLauncher.launch(

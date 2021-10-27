@@ -1,4 +1,4 @@
-package com.appsflow.theweather.ui.forecast.viewmodel
+package com.appsflow.theweather.ui.forecastscreen.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData

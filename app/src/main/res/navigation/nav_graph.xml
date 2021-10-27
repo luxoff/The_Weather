@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/forecastFragment"
-        android:name="com.appsflow.theweather.ui.forecast.view.ForecastFragment"
+        android:name="com.appsflow.theweather.ui.forecastscreen.view.ForecastFragment"
         android:label="ForecastFragment"
         tools:layout="@layout/fragment_forecast"/>
 </navigation>

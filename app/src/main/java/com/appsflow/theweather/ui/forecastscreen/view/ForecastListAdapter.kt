@@ -1,4 +1,4 @@
-package com.appsflow.theweather.ui.forecast.view
+package com.appsflow.theweather.ui.forecastscreen.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,7 +11,7 @@ class ForecastListAdapter(private val mutableForecastList: MutableList<ForecastW
     RecyclerView.Adapter<ForecastListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-            : ForecastListAdapter.ViewHolder =
+            : ViewHolder =
         ViewHolder(
             ForecastListItemBinding.inflate(
                 LayoutInflater.from(parent.context),

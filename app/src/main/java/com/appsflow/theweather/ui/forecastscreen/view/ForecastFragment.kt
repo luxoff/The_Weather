@@ -1,4 +1,4 @@
-package com.appsflow.theweather.ui.forecast.view
+package com.appsflow.theweather.ui.forecastscreen.view
 
 import android.os.Bundle
 import android.view.View
@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.appsflow.theweather.R
 import com.appsflow.theweather.data.model.ForecastWeatherInfo
 import com.appsflow.theweather.databinding.FragmentForecastBinding
-import com.appsflow.theweather.ui.forecast.viewmodel.ForecastViewModel
+import com.appsflow.theweather.ui.forecastscreen.viewmodel.ForecastViewModel
 
 class ForecastFragment : Fragment(R.layout.fragment_forecast) {
     private lateinit var forecastListAdapter: ForecastListAdapter
