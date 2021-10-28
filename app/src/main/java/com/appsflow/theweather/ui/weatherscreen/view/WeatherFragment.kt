@@ -26,8 +26,6 @@ import com.appsflow.theweather.ui.weatherscreen.viewmodel.WeatherViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
-import java.math.RoundingMode
-import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -59,9 +57,6 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         binding.apply {
-            val df = DecimalFormat("#")
-            df.roundingMode = RoundingMode.CEILING
-
             if (isNetworkAvailable(requireContext())) {
                 getWeatherWithPermissionsGranted(view, viewModel)
             } else {

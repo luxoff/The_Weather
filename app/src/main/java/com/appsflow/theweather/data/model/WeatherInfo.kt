@@ -1,7 +1,11 @@
 package com.appsflow.theweather.data.model
 
 
-import com.appsflow.theweather.data.model.extra.*
+import com.appsflow.theweather.data.model.extra.Coord
+import com.appsflow.theweather.data.model.extra.Main
+import com.appsflow.theweather.data.model.extra.Sys
+import com.appsflow.theweather.data.model.extra.Wind
+import com.appsflow.theweather.data.model.extra.forecast.Weather
 import com.google.gson.annotations.SerializedName
 
 data class WeatherInfo(

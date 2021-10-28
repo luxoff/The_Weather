@@ -1,5 +1,6 @@
 package com.appsflow.theweather.data.service.network
 
+import com.appsflow.theweather.data.model.ForecastInfo
 import com.appsflow.theweather.data.model.WeatherInfo
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -16,6 +17,15 @@ interface WeatherAPI {
         @Query("units") units: String,
         @Query("appid") apiKey: String,
     ): Response<WeatherInfo>
+
+    @GET("onecall")
+    suspend fun getOnecallForecast(
+        @Query("lat") lat: String,
+        @Query("lon") lon: String,
+        @Query("units") units: String,
+        @Query("exclude") exclude: String,
+        @Query("appid") apiKey: String,
+    ): Response<ForecastInfo>
 
     companion object {
         fun getWeatherService(): WeatherAPI {

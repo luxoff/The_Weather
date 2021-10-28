@@ -1,49 +1,37 @@
 package com.appsflow.theweather.ui.forecastscreen.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.appsflow.theweather.data.model.WeatherInfo
+import com.appsflow.theweather.data.model.extra.forecast.Daily
+import com.appsflow.theweather.data.service.MainRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
-import java.net.InetAddress
-import java.net.URL
-import java.net.UnknownHostException
 
-class ForecastViewModel : ViewModel() {
+class ForecastViewModel constructor(private val mainRepository: MainRepository) : ViewModel() {
     private val apiKey = "214aa3c9e148c620ec34997d7af3a3f3"
-    val weatherObject: MutableLiveData<WeatherInfo> by lazy { MutableLiveData<WeatherInfo>() }
+    private val excludeArgs = "current,minutely,hourly,alerts"
+    val dailyForecast: MutableLiveData<List<Daily>> by lazy { MutableLiveData<List<Daily>>() }
+    val loading: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    val errorMessage: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
-    fun getForecastInfo(lon: String, lat: String) = viewModelScope.launch {
-        withContext(Dispatchers.IO){
-            val response = getApiForecastResponse(lon, lat, apiKey)
-            val jsonWeatherObj =
-                JSONObject(response ?: "{}")
-            val list = jsonWeatherObj.getJSONArray("list")
-
+    fun getForecastResponse(lat: String, lon: String, units: String) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val response = mainRepository.getOnecallForecast(lat, lon, units, excludeArgs, apiKey)
+            if(response.isSuccessful){
+                withContext(Dispatchers.Main){
+                    dailyForecast.postValue(response.body()?.daily)
+                }
+            } else {
+                onError(response.message())
+            }
         }
     }
 
-    private fun getApiForecastResponse(lon: String, lat: String, apiKey: String): String? {
-        val apiUrl = "https://api.openweathermap.org/data/2.5/forecast?" +
-                "lat=$lat&lon=$lon&appid=$apiKey&cnt=5&units=metric"
-        //Catching possible UnknownHostException for the first time
-        try {
-            val i: InetAddress = InetAddress.getByName(apiUrl)
-        } catch (e1: UnknownHostException) {
-            e1.printStackTrace()
-        }
-
-        //Trying actual connection
-        val response: String? = try{
-            URL(apiUrl).readText(charset("UTF-8"))
-        } catch (ex: Exception){
-            ex.let { Log.e("WeatherViewModel", "error: $it") }
-            return null
-        }
-        return response
+    private fun onError(message: String) = viewModelScope.launch {
+        errorMessage.value = message
+        loading.value = false
     }
+
 }
