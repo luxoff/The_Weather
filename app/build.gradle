@@ -45,9 +45,13 @@ ext {
     nav_version = "2.3.5"
     coroutines_version = "1.5.0"
     retrofit_version = "2.9.0"
+    lottie_version = "4.2.0"
 }
 
 dependencies {
+    // Lottie
+    implementation "com.airbnb.android:lottie:$lottie_version"
+
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:28.4.2')
     implementation 'com.google.firebase:firebase-analytics-ktx'

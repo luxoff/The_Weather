@@ -58,8 +58,11 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
 
         binding.apply {
             if (isNetworkAvailable(requireContext())) {
+                lottieErrorAnimation.visibility = View.GONE
                 getWeatherWithPermissionsGranted(view, viewModel)
             } else {
+                weatherMainConstraintContainer.visibility = View.GONE
+                lottieErrorAnimation.visibility = View.VISIBLE
                 Snackbar.make(
                     view,
                     "Some error occurred! Check your internet connection and try again.",
@@ -76,8 +79,11 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                 it.startAnimation(animation)
 
                 if (isNetworkAvailable(requireContext())) {
+                    lottieErrorAnimation.visibility = View.GONE
                     getWeatherWithPermissionsGranted(view, viewModel)
                 } else {
+                    weatherMainConstraintContainer.visibility = View.GONE
+                    lottieErrorAnimation.visibility = View.VISIBLE
                     Snackbar.make(
                         view,
                         "Some error occurred! Check your internet connection and try again.",
@@ -121,6 +127,16 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                 val action = WeatherFragmentDirections.actionWeatherFragmentToForecastFragment()
                 findNavController().navigate(action)
             }
+
+            viewModel.loading.observe(requireActivity(), {
+                if(it){
+                    weatherMainConstraintContainer.visibility = View.GONE
+                    lottieLoadingAnimation.visibility = View.VISIBLE
+                } else {
+                    lottieLoadingAnimation.visibility = View.GONE
+                    weatherMainConstraintContainer.visibility = View.VISIBLE
+                }
+            })
 
             viewModel.errorMessage.observe(requireActivity(), {
                 Snackbar.make(view, it, Snackbar.LENGTH_SHORT).show()

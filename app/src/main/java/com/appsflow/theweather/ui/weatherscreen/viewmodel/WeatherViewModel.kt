@@ -17,9 +17,11 @@ class WeatherViewModel constructor(private val mainRepository: MainRepository) :
 
     fun getWeatherResponse(lat: String, lon: String, units: String) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
+            loading.postValue(true)
             val response = mainRepository.getWeatherResponse(apiKey, lat, lon, units)
             if (response.isSuccessful) {
                 withContext(Dispatchers.Main){
+                    loading.postValue(false)
                     weatherObject.postValue(response.body())
                 }
             } else {

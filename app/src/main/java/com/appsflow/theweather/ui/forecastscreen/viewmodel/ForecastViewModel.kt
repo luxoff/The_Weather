@@ -18,9 +18,11 @@ class ForecastViewModel constructor(private val mainRepository: MainRepository) 
 
     fun getForecastResponse(lat: String, lon: String, units: String) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
+            loading.postValue(true)
             val response = mainRepository.getOnecallForecast(lat, lon, units, excludeArgs, apiKey)
             if(response.isSuccessful){
                 withContext(Dispatchers.Main){
+                    loading.postValue(false)
                     dailyForecast.postValue(response.body()?.daily)
                 }
             } else {

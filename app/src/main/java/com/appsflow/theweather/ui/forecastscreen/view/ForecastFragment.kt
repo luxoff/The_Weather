@@ -50,20 +50,23 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
         val mainRepository = MainRepository(weatherService)
         val viewModel = ForecastViewModel(mainRepository)
         val forecastList = mutableListOf<Daily>()
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         forecastListAdapter = ForecastListAdapter(forecastList)
-        if(isNetworkAvailable(requireContext())) {
-            getForecastWithPermissionRequest(view, viewModel)
-        } else {
-            Snackbar.make(
-                view,
-                "Some error occurred! Check your internet connection and try again.",
-                Snackbar.LENGTH_LONG
-            ).show()
-        }
 
         binding.apply {
+            if(isNetworkAvailable(requireContext())) {
+                lottieErrorAnimation.visibility = View.GONE
+                getForecastWithPermissionRequest(view, viewModel)
+            } else {
+                llForecastMainContent.visibility = View.GONE
+                lottieErrorAnimation.visibility = View.VISIBLE
+                Snackbar.make(
+                    view,
+                    "Some error occurred! Check your internet connection and try again.",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+
             recyclerView.adapter = forecastListAdapter
             recyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
@@ -71,6 +74,16 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
                 it.forEach { day ->
                     forecastList.add(day)
                     forecastListAdapter.notifyItemInserted(forecastList.size - 1)
+                }
+            })
+
+            viewModel.loading.observe(requireActivity(), {
+                if(it){
+                    llForecastMainContent.visibility = View.GONE
+                    lottieLoadingAnimation.visibility = View.VISIBLE
+                } else {
+                    lottieLoadingAnimation.visibility = View.GONE
+                    llForecastMainContent.visibility = View.VISIBLE
                 }
             })
         }
