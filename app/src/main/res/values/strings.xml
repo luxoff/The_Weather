@@ -20,4 +20,5 @@
     <string name="sunset_icon">sunset icon</string>
     <string name="aqi_24">AQI 24</string>
     <string name="forecast_for_8_days">Forecast for 8 days</string>
+    <string name="forecast">Forecast</string>
 </resources>

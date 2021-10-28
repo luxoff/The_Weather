@@ -86,6 +86,22 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
                     llForecastMainContent.visibility = View.VISIBLE
                 }
             })
+
+            forecastSwipeRefreshLayout.setOnRefreshListener {
+                if (isNetworkAvailable(requireContext())) {
+                    lottieErrorAnimation.visibility = View.GONE
+                    getForecastWithPermissionRequest(view, viewModel)
+                } else {
+                    llForecastMainContent.visibility = View.GONE
+                    lottieErrorAnimation.visibility = View.VISIBLE
+                    Snackbar.make(
+                        view,
+                        "Some error occurred! Check your internet connection and try again.",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+                forecastSwipeRefreshLayout.isRefreshing = false
+            }
         }
 
     }

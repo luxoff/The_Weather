@@ -15,17 +15,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <ImageButton
-                android:id="@+id/btn_refresh"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:background="@drawable/ic_refresh"
-                android:backgroundTint="@color/white"
-                android:contentDescription="@string/refresh_button"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="10dp"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/weather_main_constraint_container"
@@ -98,10 +87,10 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/oval_button"
-                        android:text="Forecast"
+                        android:text="@string/forecast"
                         android:textSize="15sp"
                         app:backgroundTint="@null"
-                        app:icon="@drawable/ic_air_quality" />
+                        />
                 </LinearLayout>
 
                 <LinearLayout

@@ -69,15 +69,8 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                     Snackbar.LENGTH_LONG
                 ).show()
             }
-            btnRefresh.setOnClickListener {
 
-                val animation: Animation =
-                    AnimationUtils.loadAnimation(
-                        requireContext(),
-                        R.anim.refresh_clockwise_animation
-                    )
-                it.startAnimation(animation)
-
+            weatherSwipeRefreshLayout.setOnRefreshListener {
                 if (isNetworkAvailable(requireContext())) {
                     lottieErrorAnimation.visibility = View.GONE
                     getWeatherWithPermissionsGranted(view, viewModel)
@@ -90,6 +83,7 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                         Snackbar.LENGTH_LONG
                     ).show()
                 }
+                weatherSwipeRefreshLayout.isRefreshing = false
             }
 
             val weatherObjectObserver = Observer<WeatherInfo> {
@@ -100,7 +94,7 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                     ).format(Date(it.deltaTime.toLong() * 1000))
                 }"
                 tvCurrentWeatherStatus.text =
-                    it.weatherDescription[0].description.replaceFirstChar { it -> it.uppercase() }
+                    it.weatherDescription[0].description.replaceFirstChar { it.uppercase() }
                 tvTemperature.text = it.mainInfo.temp.toString().substringBefore(".") + "°C"
                 tvMinTemp.text = it.mainInfo.tempMin.toString().substringBefore(".") + "°C"
                 tvMaxTemp.text = it.mainInfo.tempMax.toString().substringBefore(".") + "°C"
