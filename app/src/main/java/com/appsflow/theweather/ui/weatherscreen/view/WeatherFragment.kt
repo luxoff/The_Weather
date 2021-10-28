@@ -1,7 +1,10 @@
 package com.appsflow.theweather.ui.weatherscreen.view
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -30,7 +33,6 @@ import java.util.*
 
 
 class WeatherFragment : Fragment(R.layout.fragment_weather) {
-    private lateinit var viewModel: WeatherViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
@@ -60,9 +62,17 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
             val df = DecimalFormat("#")
             df.roundingMode = RoundingMode.CEILING
 
-            getWeatherWithPermissionsGranted(view, viewModel)
-
+            if (isNetworkAvailable(requireContext())) {
+                getWeatherWithPermissionsGranted(view, viewModel)
+            } else {
+                Snackbar.make(
+                    view,
+                    "Some error occurred! Check your internet connection and try again.",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
             btnRefresh.setOnClickListener {
+
                 val animation: Animation =
                     AnimationUtils.loadAnimation(
                         requireContext(),
@@ -70,7 +80,15 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                     )
                 it.startAnimation(animation)
 
-                getWeatherWithPermissionsGranted(view, viewModel)
+                if (isNetworkAvailable(requireContext())) {
+                    getWeatherWithPermissionsGranted(view, viewModel)
+                } else {
+                    Snackbar.make(
+                        view,
+                        "Some error occurred! Check your internet connection and try again.",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
             }
 
             val weatherObjectObserver = Observer<WeatherInfo> {
@@ -151,6 +169,22 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                     Manifest.permission.ACCESS_FINE_LOCATION
                 )
             }
+        }
+    }
+
+    private fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return when {
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            /*//for other device how are able to connect with Ethernet
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            //for check internet over Bluetooth
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true*/
+            else -> false
         }
     }
 
