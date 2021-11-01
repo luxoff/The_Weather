@@ -8,19 +8,25 @@ import android.content.IntentFilter
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.findNavController
 import com.appsflow.theweather.R
-import timber.log.Timber
+import com.appsflow.theweather.ui.weatheralertscreen.WeatherAlertFragmentDirections
 
 class MainActivity : AppCompatActivity() {
     private val remoteMessageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val title = intent?.extras?.getString("remoteMessageTitle")
             val messageBody = intent?.extras?.getString("remoteMessageBody")
+            val dangerLevel = intent?.extras?.getString("dangerLevel")
             val dialog = AlertDialog.Builder(this@MainActivity)
                 .setTitle(title)
                 .setMessage(messageBody)
                 .setPositiveButton("SHOW ME") { _, _ ->
-                    Timber.i("SHOW ME button was clicked")
+                    if (dangerLevel != null) {
+                        val action = WeatherAlertFragmentDirections
+                            .actionGlobalWeatherAlertFragment(dangerLevel.toInt())
+                        findNavController(R.id.nav_host_fragment).navigate(action)
+                    }
                 }
                 .setNegativeButton("DISMISS") { dialog, _ -> dialog.dismiss() }
                 .create()

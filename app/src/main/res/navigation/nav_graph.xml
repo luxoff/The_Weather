@@ -24,4 +24,15 @@
         android:name="com.appsflow.theweather.ui.forecastscreen.view.ForecastFragment"
         android:label="ForecastFragment"
         tools:layout="@layout/fragment_forecast"/>
+    <fragment
+        android:id="@+id/weatherAlertFragment"
+        android:name="com.appsflow.theweather.ui.weatheralertscreen.WeatherAlertFragment"
+        android:label="fragment_weather_alert"
+        tools:layout="@layout/fragment_weather_alert" >
+        <argument
+            android:name="danger_level"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <action android:id="@+id/action_global_weatherAlertFragment" app:destination="@id/weatherAlertFragment" />
 </navigation>

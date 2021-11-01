@@ -24,6 +24,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             val intent = Intent("PushNotification")
             intent.putExtra("remoteMessageTitle", it?.title)
             intent.putExtra("remoteMessageBody", it?.body)
+            intent.putExtra("dangerLevel", message.data["danger_level"])
             broadcaster?.sendBroadcast(intent)
         }
     }
