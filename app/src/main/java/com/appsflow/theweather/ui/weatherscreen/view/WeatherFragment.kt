@@ -123,7 +123,7 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
             }
 
             viewModel.loading.observe(requireActivity(), {
-                if(it){
+                if (it) {
                     weatherMainConstraintContainer.visibility = View.GONE
                     lottieLoadingAnimation.visibility = View.VISIBLE
                 } else {
@@ -166,6 +166,7 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                 ) {
                     requestPermissionLauncher
                         .launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                    getWeatherWithPermissionsGranted(view, viewModel)
                 }
                     .show()
             }
@@ -173,6 +174,7 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                 requestPermissionLauncher.launch(
                     Manifest.permission.ACCESS_FINE_LOCATION
                 )
+                getWeatherWithPermissionsGranted(view, viewModel)
             }
         }
     }
