@@ -11,6 +11,8 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
 import com.appsflow.theweather.R
 import com.appsflow.theweather.ui.weatheralertscreen.WeatherAlertFragmentDirections
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 
 class MainActivity : AppCompatActivity() {
     private val remoteMessageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
@@ -44,7 +46,18 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        val googleApiAvailability = GoogleApiAvailability.getInstance()
+        val dialogGoogleServicesUnavailable = AlertDialog.Builder(this)
+            .setTitle("Google Services Unavailable")
+            .setMessage(
+                "Google Play Services are unavailable on your device. " +
+                        "The application won't work properly."
+            )
+            .setPositiveButton("I understand") { dialog, _ -> dialog.dismiss() }
+            .create()
+        if (googleApiAvailability.isGooglePlayServicesAvailable(this) != ConnectionResult.SUCCESS) {
+            dialogGoogleServicesUnavailable.show()
+        }
     }
 
     override fun onStop() {

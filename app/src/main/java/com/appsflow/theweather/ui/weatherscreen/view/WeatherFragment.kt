@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.animation.Animation
@@ -23,8 +24,7 @@ import com.appsflow.theweather.data.service.MainRepository
 import com.appsflow.theweather.data.service.network.WeatherAPI
 import com.appsflow.theweather.databinding.FragmentWeatherBinding
 import com.appsflow.theweather.ui.weatherscreen.viewmodel.WeatherViewModel
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
@@ -144,6 +144,19 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                 requireActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED -> {
+                val locationCallback = object : LocationCallback() {
+                    override fun onLocationResult(locationResult: LocationResult?) {
+                        locationResult ?: return
+                    }
+                }
+                val locationRequest = LocationRequest.create().apply {
+                    priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+                }
+                fusedLocationClient.requestLocationUpdates(
+                    locationRequest,
+                    locationCallback,
+                    Looper.getMainLooper()
+                )
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener {
                         viewModel.getWeatherResponse(
