@@ -6,8 +6,9 @@ import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -23,6 +24,7 @@ import com.appsflow.theweather.ui.forecastscreen.viewmodel.ForecastViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
+import timber.log.Timber
 
 class ForecastFragment : Fragment(R.layout.fragment_forecast) {
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
@@ -36,9 +38,9 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
                 ActivityResultContracts.RequestPermission()
             ) { isGranted: Boolean ->
                 if (isGranted) {
-                    Log.i("Permission: ", "Granted")
+                    Timber.i("Granted")
                 } else {
-                    Log.i("Permission: ", "Denied")
+                    Timber.i("Denied")
                 }
             }
     }
@@ -54,7 +56,7 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
         forecastListAdapter = ForecastListAdapter(forecastList)
 
         binding.apply {
-            if(isNetworkAvailable(requireContext())) {
+            if (isNetworkAvailable(requireContext())) {
                 lottieErrorAnimation.visibility = View.GONE
                 getForecastWithPermissionRequest(view, viewModel)
             } else {
@@ -62,7 +64,7 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
                 lottieErrorAnimation.visibility = View.VISIBLE
                 Snackbar.make(
                     view,
-                    "Some error occurred! Check your internet connection and try again.",
+                    getString(R.string.network_error_message),
                     Snackbar.LENGTH_LONG
                 ).show()
             }
@@ -75,10 +77,13 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
                     forecastList.add(day)
                     forecastListAdapter.notifyItemInserted(forecastList.size - 1)
                 }
+                val animation: Animation =
+                    AnimationUtils.loadAnimation(requireContext(), R.anim.fade_fragment)
+                forecastContainerRelativeLayout.startAnimation(animation)
             })
 
             viewModel.loading.observe(requireActivity(), {
-                if(it){
+                if (it) {
                     llForecastMainContent.visibility = View.GONE
                     lottieLoadingAnimation.visibility = View.VISIBLE
                 } else {
@@ -96,7 +101,7 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
                     lottieErrorAnimation.visibility = View.VISIBLE
                     Snackbar.make(
                         view,
-                        "Some error occurred! Check your internet connection and try again.",
+                        getString(R.string.network_error_message),
                         Snackbar.LENGTH_LONG
                     ).show()
                 }
@@ -130,7 +135,7 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
                     getString(R.string.location_permission_rationale),
                     Snackbar.LENGTH_LONG
                 ).setAction(
-                    "GRANT"
+                    getString(R.string.grant_button)
                 ) {
                     requestPermissionLauncher
                         .launch(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -153,10 +158,6 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
         return when {
             activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
             activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            /*//for other device how are able to connect with Ethernet
-            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            //for check internet over Bluetooth
-            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true*/
             else -> false
         }
     }

@@ -23,14 +23,14 @@ class MainActivity : AppCompatActivity() {
             val dialog = AlertDialog.Builder(this@MainActivity)
                 .setTitle(title)
                 .setMessage(messageBody)
-                .setPositiveButton("SHOW ME") { _, _ ->
+                .setPositiveButton(R.string.show_me) { _, _ ->
                     if (dangerLevel != null) {
                         val action = WeatherAlertFragmentDirections
                             .actionGlobalWeatherAlertFragment(dangerLevel.toInt())
                         findNavController(R.id.nav_host_fragment).navigate(action)
                     }
                 }
-                .setNegativeButton("DISMISS") { dialog, _ -> dialog.dismiss() }
+                .setNegativeButton(R.string.dismiss) { dialog, _ -> dialog.dismiss() }
                 .create()
             dialog.show()
         }
@@ -48,12 +48,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val googleApiAvailability = GoogleApiAvailability.getInstance()
         val dialogGoogleServicesUnavailable = AlertDialog.Builder(this)
-            .setTitle("Google Services Unavailable")
-            .setMessage(
-                "Google Play Services are unavailable on your device. " +
-                        "The application won't work properly."
-            )
-            .setPositiveButton("I understand") { dialog, _ -> dialog.dismiss() }
+            .setTitle(R.string.gservices_unavailable_title)
+            .setMessage(R.string.gservices_unavailable_message)
+            .setPositiveButton(R.string.i_understand) { dialog, _ -> dialog.dismiss() }
             .create()
         if (googleApiAvailability.isGooglePlayServicesAvailable(this) != ConnectionResult.SUCCESS) {
             dialogGoogleServicesUnavailable.show()

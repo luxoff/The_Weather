@@ -11,6 +11,9 @@
     <string name="max_temp">Max Temp:</string>
     <string name="refresh">Refresh</string>
     <string name="refresh_button">refresh button</string>
+    <string name="tvUpdatedAt_text">Updated %1$s at %2$s</string>
+    <string name="tvLocation_text">%1$s, %2$s</string>
+    <string name="formatted_temperature_text">%1$s°C</string>
     <string name="location_permission_rationale">In order to show the weather for your city,
         an app needs to know your location.</string>
     <string name="pressure_icon">pressure icon</string>
@@ -18,8 +21,15 @@
     <string name="wind_icon">wind icon</string>
     <string name="sunrise_icon">sunrise icon</string>
     <string name="sunset_icon">sunset icon</string>
-    <string name="aqi_24">AQI 24</string>
     <string name="forecast_for_8_days">Forecast for 8 days</string>
     <string name="forecast">Forecast</string>
-    <string name="there_is_danger_level_index_received">There is danger level index, received\nfrom push-alert:</string>
+    <string name="grant_button">GRANT</string>
+    <string name="gservices_unavailable_title">Google Services Unavailable</string>
+    <string name="gservices_unavailable_message">Google Play Services are unavailable on your device.
+        The application won\'t work properly.</string>
+    <string name="i_understand">I understand</string>
+    <string name="dismiss">DISMISS</string>
+    <string name="show_me">SHOW ME</string>
+    <string name="there_is_danger_level">There is danger level index, received\nfrom push-alert:</string>
+    <string name="network_error_message">Some error occurred! Check your internet connection and try again.</string>
 </resources>

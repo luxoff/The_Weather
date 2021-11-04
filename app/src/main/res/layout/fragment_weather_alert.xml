@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/there_is_danger_level_index_received"
+        android:text="@string/there_is_danger_level"
         android:textColor="@color/black"
         android:textSize="16sp" />
 

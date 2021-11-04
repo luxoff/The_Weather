@@ -7,7 +7,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -26,6 +25,7 @@ import com.appsflow.theweather.databinding.FragmentWeatherBinding
 import com.appsflow.theweather.ui.weatherscreen.viewmodel.WeatherViewModel
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -41,9 +41,9 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                 ActivityResultContracts.RequestPermission()
             ) { isGranted: Boolean ->
                 if (isGranted) {
-                    Log.i("Permission: ", "Granted")
+                    Timber.i("Granted")
                 } else {
-                    Log.i("Permission: ", "Denied")
+                    Timber.i("Denied")
                 }
             }
     }
@@ -65,7 +65,7 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                 lottieErrorAnimation.visibility = View.VISIBLE
                 Snackbar.make(
                     view,
-                    "Some error occurred! Check your internet connection and try again.",
+                    getString(R.string.network_error_message),
                     Snackbar.LENGTH_LONG
                 ).show()
             }
@@ -79,7 +79,7 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                     lottieErrorAnimation.visibility = View.VISIBLE
                     Snackbar.make(
                         view,
-                        "Some error occurred! Check your internet connection and try again.",
+                        getString(R.string.network_error_message),
                         Snackbar.LENGTH_LONG
                     ).show()
                 }
@@ -87,32 +87,39 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
             }
 
             val weatherObjectObserver = Observer<WeatherInfo> {
-                tvLocation.text = "${it.cityName}, ${it.systemInfo.country}"
-                tvUpdatedAt.text = "Updated ${
-                    SimpleDateFormat(
-                        "dd/MM/yyyy 'at' hh:mm a", Locale.ENGLISH
-                    ).format(Date(it.deltaTime.toLong() * 1000))
-                }"
+                val updatedDate = SimpleDateFormat(
+                    "dd/MM/yyyy", Locale.getDefault()
+                ).format(Date(it.deltaTime.toLong() * 1000))
+                val updatedTime = SimpleDateFormat(
+                    "hh:mm a", Locale.getDefault()
+                ).format(Date(it.deltaTime.toLong() * 1000))
+                val temp = it.mainInfo.temp.toString().substringBefore(".")
+                val minTemp = it.mainInfo.tempMin.toString().substringBefore(".")
+                val maxTemp = it.mainInfo.tempMax.toString().substringBefore(".")
+
+                tvLocation.text =
+                    getString(R.string.tvLocation_text, it.cityName, it.systemInfo.country)
+                tvUpdatedAt.text = getString(R.string.tvUpdatedAt_text, updatedDate, updatedTime)
                 tvCurrentWeatherStatus.text =
                     it.weatherDescription[0].description.replaceFirstChar { it.uppercase() }
-                tvTemperature.text = it.mainInfo.temp.toString().substringBefore(".") + "°C"
-                tvMinTemp.text = it.mainInfo.tempMin.toString().substringBefore(".") + "°C"
-                tvMaxTemp.text = it.mainInfo.tempMax.toString().substringBefore(".") + "°C"
+                tvTemperature.text = getString(R.string.formatted_temperature_text, temp)
+                tvMinTemp.text = getString(R.string.formatted_temperature_text, minTemp)
+                tvMaxTemp.text = getString(R.string.formatted_temperature_text, maxTemp)
                 tvPressure.text = it.mainInfo.pressure.toString()
                 tvHumidity.text = it.mainInfo.humidity.toString()
                 tvWind.text = it.windInfo.speed.toString()
 
                 tvSunrise.text = SimpleDateFormat(
-                    "hh:mm a", Locale.ENGLISH
+                    "hh:mm a", Locale.getDefault()
                 ).format(Date(it.systemInfo.sunrise.toLong() * 1000))
 
                 tvSunset.text = SimpleDateFormat(
-                    "hh:mm a", Locale.ENGLISH
+                    "hh:mm a", Locale.getDefault()
                 ).format(Date(it.systemInfo.sunset.toLong() * 1000))
 
                 val animation: Animation =
-                    AnimationUtils.loadAnimation(requireContext(), R.anim.fade_temp)
-                tvTemperature.startAnimation(animation)
+                    AnimationUtils.loadAnimation(requireContext(), R.anim.fade_fragment)
+                weatherMainConstraintContainer.startAnimation(animation)
             }
 
             viewModel.weatherObject.observe(requireActivity(), weatherObjectObserver)
@@ -175,7 +182,7 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                     getString(R.string.location_permission_rationale),
                     Snackbar.LENGTH_LONG
                 ).setAction(
-                    "GRANT"
+                    getString(R.string.grant_button)
                 ) {
                     requestPermissionLauncher
                         .launch(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -200,12 +207,7 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
         return when {
             activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
             activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            /*//for other device how are able to connect with Ethernet
-            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            //for check internet over Bluetooth
-            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true*/
             else -> false
         }
     }
-
 }
