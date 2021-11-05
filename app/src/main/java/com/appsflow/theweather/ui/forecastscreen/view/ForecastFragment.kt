@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.appsflow.theweather.R
 import com.appsflow.theweather.data.model.extra.forecast.Daily
@@ -67,6 +68,10 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
                     getString(R.string.network_error_message),
                     Snackbar.LENGTH_LONG
                 ).show()
+            }
+
+            ibBackToTheWeatherFragment.setOnClickListener {
+                findNavController().popBackStack()
             }
 
             recyclerView.adapter = forecastListAdapter
