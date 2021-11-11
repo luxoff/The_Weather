@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#00FFFFFF"
     android:orientation="vertical"
     android:layout_margin="10dp">
 
@@ -13,8 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@color/white"
-        app:cardCornerRadius="10dp">
+        android:background="#DFFFFFFF"
+        app:cardCornerRadius="10dp"
+        android:elevation="@dimen/cardview_default_elevation">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,9 +24,10 @@
 
             <TextView
                 android:id="@+id/tv_date"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:layout_margin="1dp"
                 android:textSize="17sp"
                 tools:text="Fri, 08/10" />
@@ -50,7 +51,7 @@
                     android:id="@+id/tv_min_temp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="50dp"
+                    android:layout_marginEnd="150dp"
                     android:textSize="16sp"
                     tools:text="Min Temp: 13" />
 
