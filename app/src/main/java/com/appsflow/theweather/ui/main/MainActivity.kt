@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         if (googleApiAvailability.isGooglePlayServicesAvailable(this) != ConnectionResult.SUCCESS) {
             dialogGoogleServicesUnavailable.show()
         }
+
     }
 
     override fun onStop() {
