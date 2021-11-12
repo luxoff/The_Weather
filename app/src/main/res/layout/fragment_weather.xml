@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_weather_screen"
-    tools:context=".ui.weatherscreen.view.WeatherFragment">
+    tools:context=".ui.weatherscreen.WeatherFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/weather_swipe_refresh_layout"

@@ -8,3 +8,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "The Weather"
 include ':app'
+include ':domain'
+include ':data'
+include ':core'
